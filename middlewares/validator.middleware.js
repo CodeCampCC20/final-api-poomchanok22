@@ -15,8 +15,7 @@ const validatorMiddleware = (schema) => {
         },{})
         return next({
           statusCode: 400,
-          message: "validation error",
-          errors: ValidationError
+          message: ValidationError
         })
       }
       next(error)

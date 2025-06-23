@@ -2,7 +2,7 @@ import express from "express";
 import authController from "../controllers/auth.controller.js";
 import authenticate from "../middlewares/authenticate.middleware.js";
 import validatorMiddleware from "../middlewares/validator.middleware.js";
-import { schemaRegister,schemaRegisterDoctor } from "../utills/schema-auth.js";
+import { schemaRegister } from "../utills/schema-auth.js";
 
 const authRouter = express.Router()
 
@@ -12,6 +12,5 @@ authRouter.get("/users/me", authenticate, authController.getUser)
 authRouter.patch("/users/me", authenticate, authController.editUser)
 
 
-authRouter.post("/auth/register/doctor", validatorMiddleware(schemaRegisterDoctor), authController.registerDoctor)
 
 export default authRouter

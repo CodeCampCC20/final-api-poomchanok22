@@ -1,18 +1,18 @@
-import authService from "../services/auth.service.js";
+import authDocService from "../services/authdoc.service.js";
 import createError from "../utills/create-error.js";
 import hashService from "../services/hash.service.js";
 import jwtService from "../services/jwt.service.js";
 import prisma from "../config/prisma.js";
 import bcrypt from "bcryptjs";
 
-const authController = {}
+const authControllerDoc = {}
 
-authController.register = async (req, res, next) => {
+authControllerDoc.registerDoc = async (req, res, next) => {
   try {
-    const { username, password } = req.body
+    const { username, password, specialization } = req.body
     console.log("req.body",req.body)
 
-    const exitUser = await authService.findUserByUsername(username)
+    const exitUser = await authDocService.findUserByUsername(username)
     console.log("exitUser", exitUser)
 
     if(exitUser){
@@ -22,10 +22,10 @@ authController.register = async (req, res, next) => {
     const hashPassword = hashService.hashPassword(password)
     console.log("hashPassword", hashPassword)
 
-    const newUser = await authService.createUser({username, password:hashPassword})
+    const newUser = await authDocService.createUser({username, password:hashPassword, specialization})
     console.log("newUser", newUser)
 
-    res.status(201).json({success: true, newUser: {id: newUser.id, username: newUser.username}})
+    res.status(201).json({success: true, newUser: {id: newUser.id, username: newUser.username, specialization: newUser.specialization}})
 
   } catch (error) {
     next(error)
@@ -34,11 +34,11 @@ authController.register = async (req, res, next) => {
 
 
 
-authController.login = async (req, res, next) => {
+authControllerDoc.loginDoc = async (req, res, next) => {
   try {
     const { username, password} = req.body
   
-    const existUser = await authService.findUserByUsername(username)
+    const existUser = await authDocService.findUserByUsername(username)
       console.log("existUser:", existUser)
 
       if(!existUser) {
@@ -53,7 +53,7 @@ authController.login = async (req, res, next) => {
 
       const payload = {id: existUser.id}
 
-      const accessToken = jwtService.genAccessToken(payload)
+      const accessToken = jwtService.genAccessTokenDoc(payload)
       console.log("accessToken", accessToken)
 
       res.status(200).json({success: true, accessToken})
@@ -63,21 +63,22 @@ authController.login = async (req, res, next) => {
   }
 }
 
-authController.getUser = (req,res) => {
-  res.status(200).json({success: true, user: req.user})
+authControllerDoc.getUser = (req,res) => {
+  res.status(200).json({success: true, doctor: req.doctor})
 }
 
 
-authController.editUser = async(req, res, next) => {
+authControllerDoc.editDoc = async(req, res, next) => {
 try{
-const {id} = req.user
-const {username, password} = req.body
+const {id} = req.doctor
+const {username, password, specialization} = req.body
 const hashPassword = await bcrypt.hash(password, 10)
-const user = await prisma.user.update({
-  where:{id},
+const doctor = await prisma.doctor.update({
+  where:{ id },
   data:{
     username,
-    password: hashPassword
+    password: hashPassword,
+    specialization
   }
 })
 console.log(id,username)
@@ -91,4 +92,4 @@ res.json({ message: "This is update Username"})
 
 
 
-export default authController
+export default authControllerDoc
