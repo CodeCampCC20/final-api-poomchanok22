@@ -11,4 +11,7 @@ authRouterDoc.post("/auth/login/doctor", authControllerDoc.loginDoc)
 authRouterDoc.get("/doctors/me", authenticateDoc, authControllerDoc.getUser)
 authRouterDoc.patch("/doctors/me", authenticateDoc, authControllerDoc.editDoc)
 
+
+authRouterDoc.post("/doctor-notes", authenticateDoc, authControllerDoc.createDoctor)
+
 export default authRouterDoc

@@ -24,7 +24,7 @@
 | [x] PATCH           | `/health-records/:id`        | แก้ไขบันทึกสุขภาพ                 | User   | 5+2 (authenticate) |
 | [x] DELETE          | `/health-records/:id`        | ลบบันทึกสุขภาพ                    | User   | 5+2 (authenticate) |
 | **Doctor Notes**   |                              |                                   |        |
-| [] POST            | `/doctor-notes`              | สร้างบันทึกให้ผู้ป่วย             | Doctor | 5+2 (authenticate) |
+| [x] POST            | `/doctor-notes`              | สร้างบันทึกให้ผู้ป่วย             | Doctor | 5+2 (authenticate) |
 | [] GET             | `/doctor-notes/my-notes`     | ดูบันทึกที่เขียนทั้งหมด           | Doctor | 5+2 (authenticate) |
 | [] GET             | `/doctor-notes/user/:userId` | ดูบันทึกที่เขียนให้ผู้ป่วยคนหนึ่ง | Doctor | 8+2 (authenticate) |
 | [] GET             | `/doctor-notes/received`     | ดูบันทึกที่ได้รับจากหมอ           | User   | 5+2 (authenticate) |

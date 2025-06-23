@@ -86,8 +86,29 @@ res.json({ message: "This is update Username"})
 } catch (error) {
   next(error)
 }
+}
 
-  
+authControllerDoc.createDoctor = async(req, res, next) => {
+  try{
+    const { userId, note } = req.body
+
+    const isUser = await prisma.user.findFirst({
+      where:{id: Number(userId)}
+    })
+    if(!isUser){
+      createError(400,"User does't exist")
+    }
+    await prisma.doctorNote.create({
+      data:{
+        userId: isUser.id,
+        note,
+        doctorId: req.doctor.id
+      }
+    })
+    res.status(200).json({message: "Create Successfully"})
+  } catch(error){
+    next(error)
+  }
 }
 
 
