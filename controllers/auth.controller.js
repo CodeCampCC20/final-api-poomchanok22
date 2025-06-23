@@ -89,6 +89,99 @@ res.json({ message: "This is update Username"})
   
 }
 
+authController.createHealthRecord = async(req, res, next) => {
+  try {
+    const {type, value} = req.body
+    if (!type || !value) {
+      createError(400, "Invalid Input")
+    }
+
+    await prisma.healthRecord.create({
+      data:{
+        type,
+        value,
+        userId: req.user.id
+      }
+    })
+    res.status(201).json({message: "Create Successfully"})
+  } catch(error){
+    next(error)
+  }
+}
+
+authController.getRecord = async(req, res, next) => {
+  try {
+    const records = await prisma.healthRecord.findMany({
+      where:{
+        userId: req.user.id
+      }
+    }) 
+    res.status(200).json({message:"Get Record Successfully",records})
+  } catch (error) {
+    next(error)
+  }
+}
+
+authController.getRecordById = async(req, res, next) => {
+  try {
+    const {id} = req.params
+    const recordById = await prisma.healthRecord.findFirst({
+      where: { id: Number(id)}
+    })
+
+    if(!recordById) {
+      createError(400,"Record does't exist!")
+    }
+
+    res.status(200).json({message:`Get Record By Id Successfully`,recordById})
+  } catch (error) {
+    next (error)
+  }
+}
+
+authController.editRecordById = async(req, res, next) =>{
+  try {
+    const {id} = req.params
+    const {type, value} = req.body
+
+    const isRecord = await prisma.healthRecord.findFirst({
+      where:{id: Number(id)}
+    })
+    if(!isRecord){
+      createError(400,"Record does't exist")
+    }
+
+    const editRecord = await prisma.healthRecord.update({
+      where:{id: Number(id)},
+      data:{
+        type,
+        value
+      }
+    })
+    res.status(200).json({message:`Edit Successfully : `,editRecord:{type, value}})
+
+  } catch(error) {
+    next(error)
+  }
+}
+
+authController.deleteRecordById = async(req, res, next)=>{
+  try {
+    const { id } = req.params
+    const isRecord = await prisma.healthRecord.findFirst({
+      where:{id: Number(id)}
+    })
+    if (!isRecord) {
+      createError(400, "Can not Delete")
+    }
+    await prisma.healthRecord.delete({
+      where:{id: Number(id)}
+    })
+    res.status(200).json({message: "This Record is Deleted"})
+  } catch (error) {
+    next(error)
+  }
+}
 
 
 export default authController

@@ -11,6 +11,11 @@ authRouter.post("/auth/login/user", authController.login)
 authRouter.get("/users/me", authenticate, authController.getUser)
 authRouter.patch("/users/me", authenticate, authController.editUser)
 
+authRouter.post("/health-records", authenticate, authController.createHealthRecord)
+authRouter.get("/health-records", authenticate, authController.getRecord)
+authRouter.get("/health-records/:id", authenticate, authController.getRecordById)
+authRouter.patch("/health-records/:id", authenticate, authController.editRecordById)
+authRouter.delete("/health-records/:id", authenticate, authController.deleteRecordById)
 
 
 export default authRouter
